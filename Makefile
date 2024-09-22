@@ -14,11 +14,13 @@ run: ## Run Application
 fmt: ## Format
 	@make -C ./backend fmt
 	@make -C ./proto fmt
+	@make -C ./database fmt
 
 .PHONY: lint
 lint: ## Lint code
 	@make -C ./backend lint
 	@make -C ./proto lint
+	@make -C ./database lint
 
 .PHONY: test
 test: ## Test code
