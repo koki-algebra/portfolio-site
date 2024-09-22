@@ -1,0 +1,40 @@
+services:
+  api-server:
+    image: api-server
+    build:
+      context: .
+      dockerfile: ./backend/Dockerfile
+      target: dev
+    restart: always
+    container_name: api-server
+    tty: true
+    stdin_open: true
+    working_dir: /workspaces
+    env_file:
+      - .env.app
+      - .env.secret
+    ports:
+      - 8080:8080
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./backend:/workspaces
+
+  db:
+    image: postgres:16.2
+    container_name: db
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_DATABASE}
+    volumes:
+      - ./database/data:/tmp/data
+      - ./database/sql:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-app}"]
+      interval: 5s
+      retries: 3

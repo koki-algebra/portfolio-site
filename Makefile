@@ -35,7 +35,7 @@ clear: ## Clear Application
 
 .PHONY: logs
 logs: ## Show API Server log
-	@docker compose logs -f api_server
+	@docker compose logs -f api-server
 
 .PHONY: psql
 psql: ## Login PostgreSQL
