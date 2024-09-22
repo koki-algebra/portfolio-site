@@ -17,5 +17,10 @@
   "gopls": {
     "buildFlags": ["-tags=wireinject"],
     "formatting.local": "backend"
+  },
+  "sqlfluff.executablePath": "sqlfluff",
+  "sqlfluff.config": "${workspaceFolder}/database/.sqlfluff",
+  "[sql]": {
+    "editor.defaultFormatter": "dorzey.vscode-sqlfluff"
   }
 }
