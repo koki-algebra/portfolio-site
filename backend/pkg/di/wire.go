@@ -13,7 +13,7 @@ import (
 	"backend/internal/application/usecase"
 	"backend/internal/infrastructure/database"
 	"backend/internal/infrastructure/repository"
-	userservice "backend/internal/presentation/service/user"
+	"backend/internal/presentation/service/userservice"
 	"backend/pkg/grpc/gen/user/v1/userv1connect"
 )
 

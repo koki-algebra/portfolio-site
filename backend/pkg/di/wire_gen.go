@@ -10,7 +10,7 @@ import (
 	"backend/internal/application/usecase"
 	"backend/internal/infrastructure/database"
 	"backend/internal/infrastructure/repository"
-	"backend/internal/presentation/service/user"
+	"backend/internal/presentation/service/userservice"
 	"backend/pkg/grpc/gen/user/v1/userv1connect"
 	"context"
 	"database/sql"
