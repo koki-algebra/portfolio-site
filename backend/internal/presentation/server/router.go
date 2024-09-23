@@ -29,10 +29,18 @@ func newRouter(
 		interseptor.NewCommonInterceptors()...,
 	)
 
+	interceptors, err := di.InitInterceptor(ctx, sqlDB)
+	if err != nil {
+		return nil, err
+	}
+
 	// User Service
 	mux.Handle(userv1connect.NewUserServiceHandler(
 		handlers.UserServiceHandler,
 		commonInterceptors,
+		connect.WithInterceptors(
+			interceptors.AuthInterceptor.Auth(),
+		),
 	))
 
 	return middleware.NewCommonMiddlewares(mux), nil
