@@ -13,7 +13,11 @@ require (
 	github.com/lib/pq v1.10.9
 	github.com/rs/cors v1.11.1
 	github.com/sourcegraph/conc v0.3.0
+	golang.org/x/net v0.23.0
 	google.golang.org/protobuf v1.34.2
 )
 
-require go.uber.org/multierr v1.11.0 // indirect
+require (
+	go.uber.org/multierr v1.11.0 // indirect
+	golang.org/x/text v0.14.0 // indirect
+)

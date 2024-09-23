@@ -12,6 +12,8 @@ import (
 	"time"
 
 	"github.com/sourcegraph/conc/pool"
+	"golang.org/x/net/http2"
+	"golang.org/x/net/http2/h2c"
 
 	"backend/internal/config"
 	"backend/internal/infrastructure/database"
@@ -44,7 +46,7 @@ func (s *Server) Run(ctx context.Context) error {
 		ReadTimeout:       time.Second * 15,
 		ReadHeaderTimeout: time.Second * 15,
 		IdleTimeout:       time.Second * 120,
-		Handler:           router,
+		Handler:           h2c.NewHandler(router, &http2.Server{}),
 	}
 
 	pool := pool.New().WithErrors().WithContext(ctx)
