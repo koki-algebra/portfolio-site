@@ -8,11 +8,13 @@ import (
 	"strings"
 	"time"
 
+	"connectrpc.com/connect"
 	chiMiddleware "github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/httplog/v2"
 	"github.com/rs/cors"
 
 	"backend/internal/config"
+	"backend/internal/presentation/interseptor"
 	"backend/internal/presentation/middleware"
 	"backend/pkg/di"
 	"backend/pkg/grpc/gen/user/v1/userv1connect"
@@ -44,7 +46,16 @@ func newRouter(ctx context.Context, sqlDB *sql.DB) (http.Handler, error) {
 
 	mux := http.NewServeMux()
 
-	mux.Handle(userv1connect.NewUserServiceHandler(handlers.UserServiceHandler))
+	// Common Interceptors
+	commonInterceptors := connect.WithInterceptors(
+		interseptor.NewCommonInterceptors()...,
+	)
+
+	// User Service
+	mux.Handle(userv1connect.NewUserServiceHandler(
+		handlers.UserServiceHandler,
+		commonInterceptors,
+	))
 
 	return middleware.With(
 		mux,
