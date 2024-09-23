@@ -13,6 +13,7 @@ import (
 	"backend/internal/application/usecase"
 	"backend/internal/infrastructure/database"
 	"backend/internal/infrastructure/repository"
+	"backend/internal/presentation/interseptor"
 	"backend/internal/presentation/service/userservice"
 	"backend/pkg/grpc/gen/user/v1/userv1connect"
 )
@@ -29,9 +30,12 @@ var usecaseSet = wire.NewSet(
 	usecase.NewUser,
 )
 
-// Connect Service
 var connectServiceSet = wire.NewSet(
 	userservice.New,
+)
+
+var interceptorSet = wire.NewSet(
+	interseptor.NewAuthInterceptor,
 )
 
 type UsecaseSet struct {
@@ -40,6 +44,10 @@ type UsecaseSet struct {
 
 type ConnectServiceSet struct {
 	UserServiceHandler userv1connect.UserServiceHandler
+}
+
+type InterceptorSet struct {
+	AuthInterceptor *interseptor.AuthInterceptor
 }
 
 func InitConnectService(ctx context.Context, db *sql.DB) (*ConnectServiceSet, error) {
@@ -52,4 +60,15 @@ func InitConnectService(ctx context.Context, db *sql.DB) (*ConnectServiceSet, er
 	)
 
 	return &ConnectServiceSet{}, nil
+}
+
+func InitInterceptor(ctx context.Context, db *sql.DB) (*InterceptorSet, error) {
+	wire.Build(
+		infrastructureSet,
+		repositorySet,
+		interceptorSet,
+		wire.Struct(new(InterceptorSet), "*"),
+	)
+
+	return &InterceptorSet{}, nil
 }

@@ -10,6 +10,7 @@ import (
 	"backend/internal/application/usecase"
 	"backend/internal/infrastructure/database"
 	"backend/internal/infrastructure/repository"
+	"backend/internal/presentation/interseptor"
 	"backend/internal/presentation/service/userservice"
 	"backend/pkg/grpc/gen/user/v1/userv1connect"
 	"context"
@@ -30,6 +31,16 @@ func InitConnectService(ctx context.Context, db *sql.DB) (*ConnectServiceSet, er
 	return diConnectServiceSet, nil
 }
 
+func InitInterceptor(ctx context.Context, db *sql.DB) (*InterceptorSet, error) {
+	sqlxDB := database.NewSqlxDB(db)
+	user := repository.NewUser(sqlxDB)
+	authInterceptor := interseptor.NewAuthInterceptor(user)
+	diInterceptorSet := &InterceptorSet{
+		AuthInterceptor: authInterceptor,
+	}
+	return diInterceptorSet, nil
+}
+
 // wire.go:
 
 var infrastructureSet = wire.NewSet(database.NewSqlxDB)
@@ -38,8 +49,9 @@ var repositorySet = wire.NewSet(repository.NewUser)
 
 var usecaseSet = wire.NewSet(usecase.NewUser)
 
-// Connect Service
 var connectServiceSet = wire.NewSet(userservice.New)
+
+var interceptorSet = wire.NewSet(interseptor.NewAuthInterceptor)
 
 type UsecaseSet struct {
 	User usecase.User
@@ -47,4 +59,8 @@ type UsecaseSet struct {
 
 type ConnectServiceSet struct {
 	UserServiceHandler userv1connect.UserServiceHandler
+}
+
+type InterceptorSet struct {
+	AuthInterceptor *interseptor.AuthInterceptor
 }
