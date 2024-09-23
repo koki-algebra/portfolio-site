@@ -8,9 +8,13 @@ service UserService {
   rpc GetMe(GetMeRequest) returns (GetMeResponse) {}
 }
 
+message User {
+  string user_id = 1;
+  string email = 2;
+}
+
 message GetMeRequest {}
 
 message GetMeResponse {
-  string id = 1;
-  string email = 2;
+  User user = 1;
 }
