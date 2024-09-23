@@ -2,9 +2,11 @@ package userservice
 
 import (
 	"context"
+	"fmt"
 
 	"connectrpc.com/connect"
 
+	"backend/internal/domain/model"
 	userv1 "backend/pkg/grpc/gen/user/v1"
 )
 
@@ -12,9 +14,13 @@ func (s *userServiceImpl) GetMe(
 	ctx context.Context,
 	req *connect.Request[userv1.GetMeRequest],
 ) (*connect.Response[userv1.GetMeResponse], error) {
+	user, ok := model.UserFromContext(ctx)
+	if !ok {
+		return nil, connect.NewError(connect.CodeInternal, fmt.Errorf("user not set in context"))
+	}
+
 	resp := connect.NewResponse(&userv1.GetMeResponse{
-		Id:    "3b9f87cf-12f5-4f29-a7f5-561f7d08f57d",
-		Email: "example@example.com",
+		User: convertUser(user),
 	})
 
 	return resp, nil
