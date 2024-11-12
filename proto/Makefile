@@ -12,7 +12,3 @@ fmt: ## Format code
 .PHONY: lint
 lint: ## Lint code
 	@buf lint
-
-.PHONY: generate
-generate: ## Generate code
-	@buf generate

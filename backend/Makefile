@@ -13,6 +13,12 @@ fmt: ## Format code
 lint: ## Lint code
 	@golangci-lint run --fix --allow-parallel-runners
 
+.PHONY: test
+test: ## Run test
+	@go test -cover ./...
+
 .PHONY: generate
 generate: ## Generate code
 	@go generate ./...
+	@buf generate --config ../proto/buf.yaml ../proto
+	@go mod tidy

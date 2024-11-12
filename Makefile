@@ -29,7 +29,6 @@ test: ## Test code
 .PHONY: generate
 generate: ## Generate code
 	@make -C ./backend generate
-	@make -C ./proto generate
 
 .PHONY: clear
 clear: ## Clear Application
