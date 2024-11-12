@@ -4,6 +4,7 @@ go 1.22.4
 
 require (
 	connectrpc.com/connect v1.17.0
+	connectrpc.com/cors v0.1.0
 	github.com/caarlos0/env/v6 v6.10.1
 	github.com/go-chi/chi/v5 v5.1.0
 	github.com/go-chi/httplog/v2 v2.1.1
