@@ -6,7 +6,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
 
-	"backend/internal/domain/model"
+	usermodel "backend/internal/domain/model/user"
 	"backend/internal/domain/repository"
 )
 
@@ -20,10 +20,10 @@ func NewUser(db *sqlx.DB) repository.User {
 	}
 }
 
-func (repo *userImpl) FindByID(ctx context.Context, userID uuid.UUID) (*model.User, error) {
-	return &model.User{}, nil
+func (repo *userImpl) FindByID(ctx context.Context, userID uuid.UUID) (*usermodel.User, error) {
+	return &usermodel.User{}, nil
 }
 
-func (repo *userImpl) FindByEmail(ctx context.Context, email string) (*model.User, error) {
-	return &model.User{}, nil
+func (repo *userImpl) FindByEmail(ctx context.Context, email string) (*usermodel.User, error) {
+	return &usermodel.User{}, nil
 }

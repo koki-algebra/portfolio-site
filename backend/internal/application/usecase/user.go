@@ -6,12 +6,12 @@ import (
 	"connectrpc.com/connect"
 	"github.com/google/uuid"
 
-	"backend/internal/domain/model"
+	usermodel "backend/internal/domain/model/user"
 	"backend/internal/domain/repository"
 )
 
 type User interface {
-	GetByID(ctx context.Context, userID uuid.UUID) (*model.User, error)
+	GetByID(ctx context.Context, userID uuid.UUID) (*usermodel.User, error)
 }
 
 type userImpl struct {
@@ -27,7 +27,7 @@ func NewUser(repo repository.User) User {
 func (u *userImpl) GetByID(
 	ctx context.Context,
 	userID uuid.UUID,
-) (*model.User, error) {
+) (*usermodel.User, error) {
 	user, err := u.repo.FindByID(ctx, userID)
 	if err != nil {
 		return nil, connect.NewError(connect.CodeInternal, err)

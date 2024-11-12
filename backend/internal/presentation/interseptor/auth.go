@@ -9,7 +9,7 @@ import (
 	"google.golang.org/api/idtoken"
 
 	"backend/internal/config"
-	"backend/internal/domain/model"
+	usermodel "backend/internal/domain/model/user"
 	"backend/internal/domain/repository"
 )
 
@@ -52,7 +52,7 @@ func (a *AuthInterceptor) Auth() connect.UnaryInterceptorFunc {
 				return nil, connect.NewError(connect.CodeInternal, fmt.Errorf("failed to find user: %v", err))
 			}
 
-			ctx = model.ContextWithUser(ctx, user)
+			ctx = usermodel.ContextWithUser(ctx, user)
 
 			return next(ctx, req)
 		}
