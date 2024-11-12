@@ -15,6 +15,7 @@ func ContextWithCaller(ctx context.Context, user *usermodel.User) context.Contex
 
 	caller := &Caller{
 		userID: user.UserID,
+		authID: user.AuthID,
 		email:  user.Email,
 	}
 
