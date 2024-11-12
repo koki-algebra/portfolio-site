@@ -4,16 +4,22 @@ import (
 	"net/http"
 	"strings"
 
+	connectcors "connectrpc.com/cors"
 	"github.com/rs/cors"
 
 	"backend/internal/config"
 )
 
 func WithCORS(next http.Handler) http.Handler {
+	allowedHeaders := connectcors.AllowedHeaders()
+	allowedHeaders = append(allowedHeaders, "Authorization")
+
 	m := cors.New(cors.Options{
 		AllowedOrigins: strings.Split(config.Env.ServerAllowOrigins, ","),
-		AllowedMethods: []string{http.MethodGet, http.MethodPost, http.MethodOptions},
-		AllowedHeaders: []string{"Authorization", "Content-Type"},
+		AllowedMethods: connectcors.AllowedMethods(),
+		AllowedHeaders: allowedHeaders,
+		ExposedHeaders: connectcors.ExposedHeaders(),
+		MaxAge:         7200,
 	})
 
 	return m.Handler(next)
