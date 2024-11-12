@@ -7,6 +7,7 @@ import (
 	"connectrpc.com/connect"
 
 	usermodel "backend/internal/domain/model/user"
+	"backend/internal/presentation/converter"
 	userv1 "backend/pkg/grpc/gen/user/v1"
 )
 
@@ -20,7 +21,7 @@ func (s *userServiceImpl) GetMe(
 	}
 
 	resp := connect.NewResponse(&userv1.GetMeResponse{
-		User: convertUser(user),
+		User: converter.ConvertUser(user),
 	})
 
 	return resp, nil
