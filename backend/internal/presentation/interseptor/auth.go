@@ -6,7 +6,6 @@ import (
 	"fmt"
 
 	"connectrpc.com/connect"
-	"google.golang.org/api/idtoken"
 
 	"backend/internal/config"
 	usermodel "backend/internal/domain/model/user"
@@ -31,19 +30,17 @@ func (a *AuthInterceptor) Auth() connect.UnaryInterceptorFunc {
 				return nil, connect.NewError(connect.CodeUnauthenticated, fmt.Errorf("id token is required"))
 			}
 
-			audience := config.Env.GoogleClientID
-
-			payload, err := idtoken.Validate(ctx, rawTokenString, audience)
+			client, err := config.FirebaseApp.Auth(ctx)
 			if err != nil {
-				return nil, connect.NewError(connect.CodeUnauthenticated, fmt.Errorf("invalid id token: %v", err))
+				return nil, connect.NewError(connect.CodeInternal, fmt.Errorf("failed to initialize firebase auth client"))
 			}
 
-			email, ok := a.getEmail(payload.Claims)
-			if !ok {
-				return nil, connect.NewError(connect.CodeInvalidArgument, fmt.Errorf("the id token does not contain an email"))
+			token, err := client.VerifyIDToken(ctx, rawTokenString)
+			if err != nil {
+				return nil, connect.NewError(connect.CodeUnauthenticated, fmt.Errorf("unauthenticated user"))
 			}
 
-			user, err := a.repo.FindByEmail(ctx, email)
+			user, err := a.repo.FindByAuthID(ctx, token.UID)
 			if err != nil {
 				if errors.Is(err, repository.ErrNotFound) {
 					return nil, connect.NewError(connect.CodeNotFound, fmt.Errorf("user not found"))
@@ -57,18 +54,4 @@ func (a *AuthInterceptor) Auth() connect.UnaryInterceptorFunc {
 			return next(ctx, req)
 		}
 	}
-}
-
-func (a *AuthInterceptor) getEmail(claims map[string]any) (string, bool) {
-	v, ok := claims["email"]
-	if !ok {
-		return "", false
-	}
-
-	email, ok := v.(string)
-	if !ok {
-		return "", false
-	}
-
-	return email, true
 }

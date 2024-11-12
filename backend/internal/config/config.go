@@ -3,6 +3,7 @@ package config
 import (
 	"context"
 
+	firebase "firebase.google.com/go/v4"
 	"github.com/caarlos0/env/v6"
 )
 
@@ -14,7 +15,8 @@ const (
 )
 
 var (
-	Env = new(EnvConfig)
+	Env         = new(EnvConfig)
+	FirebaseApp = new(firebase.App)
 )
 
 type EnvConfig struct {
@@ -29,15 +31,17 @@ type EnvConfig struct {
 	// Server
 	ServerPort         int    `env:"SERVER_PORT" envDefault:"80"`
 	ServerAllowOrigins string `env:"SERVER_ALLOW_ORIGINS"`
-	// Google Cloud
-	GoogleClientID     string `env:"GOOGLE_CLIENT_ID"`
-	GoogleClientSecret string `env:"GOOGLE_CLIENT_SECRET"`
 }
 
 func Init(ctx context.Context) (err error) {
-	if err = env.Parse(Env); err != nil {
-		return
+	if err := env.Parse(Env); err != nil {
+		return err
 	}
 
-	return
+	FirebaseApp, err = firebase.NewApp(ctx, nil)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

@@ -24,6 +24,6 @@ func (repo *userImpl) FindByID(ctx context.Context, userID uuid.UUID) (*usermode
 	return &usermodel.User{}, nil
 }
 
-func (repo *userImpl) FindByEmail(ctx context.Context, email string) (*usermodel.User, error) {
+func (repo *userImpl) FindByAuthID(ctx context.Context, email string) (*usermodel.User, error) {
 	return &usermodel.User{}, nil
 }
