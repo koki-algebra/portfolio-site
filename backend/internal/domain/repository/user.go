@@ -10,5 +10,5 @@ import (
 
 type User interface {
 	FindByID(ctx context.Context, userID uuid.UUID) (*usermodel.User, error)
-	FindByEmail(ctx context.Context, email string) (*usermodel.User, error)
+	FindByAuthID(ctx context.Context, email string) (*usermodel.User, error)
 }
