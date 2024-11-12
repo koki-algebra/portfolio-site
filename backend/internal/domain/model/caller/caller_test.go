@@ -10,7 +10,7 @@ import (
 	usermodel "backend/internal/domain/model/user"
 )
 
-func TestContextWithCaller(t *testing.T) {
+func TestCaller(t *testing.T) {
 	userID := uuid.New()
 	authID := uuid.NewString()
 	email := "example@example.com"
